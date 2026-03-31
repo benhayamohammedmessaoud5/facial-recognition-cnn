@@ -1,0 +1,90 @@
+# Facial Recognition using Convolutional Neural Networks
+
+A comparative study of deep learning strategies for facial recognition on a limited dataset.
+
+## Project Overview
+
+This project implements and compares **4 CNN architectures** for facial recognition:
+- Custom CNN (built from scratch)
+- VGG-16 (transfer learning)
+- ResNet50 (transfer learning)
+- InceptionV3 / GoogleNet (transfer learning)
+
+The goal was to evaluate the trade-offs between training from scratch vs. transfer learning on a small, high-variance dataset.
+
+## Dataset
+
+**"5 Faces Dataset"** — Ankush Kuwar (Kaggle)
+- ~750 images across 5 celebrity classes
+- Classes: Bill Gates, Jack Ma, Narendra Modi, Elon Musk, Donald Trump
+- ~130 images per class
+- License: CC0 (Public Domain)
+- [Dataset link](https://www.kaggle.com/datasets/ankushkunwar7777/5-face)
+
+## Results
+
+| Model | Validation Accuracy | Notes |
+|---|---|---|
+| Custom CNN | 83.90% | Unstable training, 50 epochs |
+| VGG-16 | ~88% | Smooth convergence |
+| ResNet50 | <40% | Failed — too deep for small dataset |
+| **InceptionV3** | **95.76%** | ✅ Best model |
+
+## Key Findings
+
+- **Transfer learning outperforms** training from scratch on limited data
+- **InceptionV3's multi-scale Inception Modules** are best suited for facial details
+- **ResNet50 fails** on small datasets — complexity must match data size
+- **Custom CNN is viable** but requires careful tuning and data augmentation
+
+## Methodology
+
+### 1. Face Localization
+Haar Cascade Classifiers (OpenCV) used to detect and crop face regions → resized to 128×128×3.
+
+### 2. Preprocessing
+- Pixel normalization: [0, 255] → [0, 1]
+- 80/20 train/test split (stratified)
+- Data augmentation: rotation, zoom, horizontal flip (ImageDataGenerator)
+
+### 3. Architecture Strategy
+- **Custom CNN**: 3 conv blocks (32→64→128 filters) + BatchNorm + Dropout(0.5)
+- **Transfer Learning**: Frozen pre-trained base + Global Average Pooling + Dense head
+- **Optimizer**: Adam, lr=0.0001
+- **Loss**: Categorical Cross-Entropy
+
+## Environment
+```
+Python 3.10
+TensorFlow 2.12.0
+opencv-python 4.7.0
+scikit-learn 1.2.2
+matplotlib 3.7.1
+seaborn 0.12.2
+```
+
+Platform: Google Colab (NVIDIA Tesla T4 GPU)
+
+## Requirements
+```
+tensorflow==2.12.0
+opencv-python==4.7.0
+scikit-learn==1.2.2
+matplotlib==3.7.1
+seaborn==0.12.2
+numpy==1.23.5
+```
+
+## Usage
+
+1. Open `facial_recognition_cnn.ipynb` in Google Colab
+2. Run all cells sequentially
+3. Ensure GPU runtime is enabled (Runtime → Change runtime type → T4 GPU)
+
+## License
+
+MIT License — see [LICENSE](LICENSE)
+
+## Author
+
+[Votre Nom] — [Votre université] — [Année]
